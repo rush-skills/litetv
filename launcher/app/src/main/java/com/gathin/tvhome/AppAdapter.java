@@ -199,6 +199,8 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /** Tile names and bundled banners that replace the app's own (config.xml, app_labels and app_banners). */
     private final Map<String, String> appLabels, appBanners;
     private final List<Entry> items = new ArrayList<>();
+    /** The Up Next tile right after the dock (config.xml, up_next; not a theme key). */
+    private final boolean upNext;
 
     AppAdapter(Context ctx, TileListener listener, int dockSize, Config cfg) {
         this.ctx = ctx;
@@ -220,6 +222,7 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         this.launchActions = cfg.launchActions;
         this.appLabels = cfg.appLabels;
         this.appBanners = cfg.appBanners;
+        this.upNext = ctx.getResources().getBoolean(R.bool.up_next);
         // Tiles keep their identity across reload(), so a focused tile stays on its app instead of
         // its view being rebound to whatever app now sits in that slot.
         setHasStableIds(true);
@@ -277,6 +280,10 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 fresh.add(new Entry(label, component, banner, icon));
             }
         }
+        if (upNext) {
+            fresh.add(new Entry(ctx.getString(R.string.up_next), new ComponentName(ctx, UpNextActivity.class),
+                    new UpNextBanner(ctx), null));
+        }
         Collections.sort(fresh, (a, b) -> {
             // The owner's own order first; tiles it does not know (new installs) follow by the rule below.
             int saved = Order.compare(savedRanks, a.component.flattenToShortString(), b.component.flattenToShortString());
@@ -287,6 +294,9 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if (fb < 0) return -1;
                 return Integer.compare(fa, fb);
             }
+            // Up Next comes right after the configured dock apps, then the cards, then the alphabetical grid.
+            boolean ua = isUpNext(a), ub = isUpNext(b);
+            if (ua != ub) return ua ? -1 : 1;
             // Cards come right after the configured dock apps, before the alphabetical grid.
             boolean ca = a.kind == Entry.CARD, cb = b.kind == Entry.CARD;
             if (ca != cb) return ca ? -1 : 1;
@@ -436,6 +446,11 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             h.label.setVisibility(View.VISIBLE);
         }
         h.card.setOnClickListener(v -> launch(e));
+        // App info for the Up Next tile would be the launcher's own page, with Uninstall on it.
+        if (isUpNext(e)) {
+            h.card.setOnLongClickListener(null);
+            return;
+        }
         h.card.setOnLongClickListener(v -> {
             Intent i = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + e.pkg));
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -445,6 +460,10 @@ public class AppAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
             return true;
         });
+    }
+
+    private boolean isUpNext(Entry e) {
+        return e.kind == Entry.APP && e.pkg.equals(ctx.getPackageName());
     }
 
     /** Opens the tile's activity by explicit component, with no extras: a card can name nothing else. */

@@ -8,6 +8,16 @@
     <uses-feature android:name="android.hardware.location.gps" android:required="false" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- Up Next: card art from the web, and DnsGuard's TLS check of the ad-blocking DNS server. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Up Next: other apps' Continue watching and preview rows. A runtime permission that
+         build-and-install grants with pm grant; READ_EPG_DATA is a normal permission on Android 14. -->
+    <uses-permission android:name="android.permission.READ_TV_LISTINGS" />
+    <uses-permission android:name="com.android.providers.tv.permission.READ_EPG_DATA" />
+    <!-- DnsGuard: switches Private DNS. Only adb can grant it (build-and-install does); without it the
+         guard and the menu switch do nothing. -->
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- Needed since Android 10 to read the Wi-Fi network name for the network pill. Never requested at
          runtime: build-and-install grants it with pm grant, so lint's Android 12 "ask for COARSE with
@@ -62,6 +72,21 @@
                 <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Up Next (config.xml up_next). Its own task, so Back returns to Home and Home clears it. -->
+        <activity
+            android:name=".UpNextActivity"
+            android:exported="false"
+            android:taskAffinity="com.gathin.tvhome.upnext"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.TvHome"
+            android:screenOrientation="landscape" />
+
+        <!-- adb test hook for DnsGuard's fallback; only holders of WRITE_SECURE_SETTINGS (the adb shell) can send. -->
+        <receiver
+            android:name=".DnsGuardTestReceiver"
+            android:exported="true"
+            android:permission="android.permission.WRITE_SECURE_SETTINGS" />
 
         <activity
             android:name=".LauncherSettingsActivity"

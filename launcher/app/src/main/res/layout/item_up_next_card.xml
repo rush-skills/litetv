@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One Up Next card; UpNextActivity sets its size (16:9, or 2:3 for a row of posters). The title shows
+     until the art arrives, and stays when there is none. -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="176dp"
+    android:layout_height="99dp"
+    android:layout_marginStart="6dp"
+    android:layout_marginEnd="6dp"
+    android:background="@drawable/up_next_card_bg"
+    android:foreground="@drawable/up_next_card_focus"
+    android:focusable="true"
+    android:clickable="true">
+
+    <TextView
+        android:id="@+id/fallback"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="10dp"
+        android:textSize="13sp"
+        android:textColor="#B3FFFFFF"
+        android:fontFamily="@font/outfit_medium"
+        android:maxLines="3"
+        android:ellipsize="end" />
+
+    <ImageView
+        android:id="@+id/art"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:contentDescription="@null" />
+
+    <ProgressBar
+        android:id="@+id/progress"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="8dp"
+        android:max="1000"
+        android:progressTint="@android:color/white"
+        android:progressBackgroundTint="#66FFFFFF"
+        android:visibility="gone" />
+</FrameLayout>

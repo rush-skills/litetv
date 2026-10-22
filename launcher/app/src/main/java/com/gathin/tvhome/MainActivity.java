@@ -231,6 +231,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private RecyclerView.OnScrollListener pendingFocusScroll;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
+    /** Falls back from the ad-blocking Private DNS when it stops answering, and back again (DnsGuard). */
+    private DnsGuard dnsGuard;
     /** Refreshes the network pill when the connection changes: at boot Wi-Fi often connects after Home is shown. */
     private final ConnectivityManager.NetworkCallback networkCallback = new ConnectivityManager.NetworkCallback() {
         @Override
@@ -592,6 +594,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                     .removeCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
                     .build(), vpnCallback);
         }
+        dnsGuard = new DnsGuard(this);
+        dnsGuard.start();
         // Not after recreate(): the launch intent survives it and would open the settings again.
         if (savedInstanceState == null) openLauncherSettingsIfAsked(getIntent());
     }
@@ -658,6 +662,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         rebuildOnResume = false;
         updateGreeting();
         updateRace();
+        dnsGuard.evaluate();
         // The network and Inputs pills keep their state while Home is in the background, and callbacks update them
         // when the network or the inputs change, so this refresh only catches anything missed. Its binder calls
         // (about 7 ms on a TCL C755, most of it WifiManager.getConnectionInfo) would hold up the first frame back
@@ -855,6 +860,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             cm.unregisterNetworkCallback(networkCallback);
             cm.unregisterNetworkCallback(vpnCallback);
         }
+        dnsGuard.stop();
     }
 
     /**
@@ -2470,6 +2476,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (moduleCards) addSettingsMenuRow(rows, popup, R.string.module_cards, this::showModuleCards);
         if (dockRow) addSettingsMenuRow(rows, popup, R.string.dock_edit, this::startDockEdit);
         addSettingsMenuRow(rows, popup, R.string.reorder, this::toggleReorder);
+        addSettingsMenuRow(rows, popup, getString(dnsLabel()), this::toggleAdBlockingDns);
         panel.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         popup.setWidth(Math.max((int) (200 * density), panel.getMeasuredWidth()));
         // Hebrew puts Settings at the left of the header: grow the menu inward from it.
@@ -2478,7 +2485,27 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         rows.getChildAt(0).requestFocus();
     }
 
+    private int dnsLabel() {
+        if (!dnsGuard.canWrite()) return R.string.dns_label_no_permission;
+        if (!dnsGuard.isOn()) return R.string.dns_label_off;
+        return dnsGuard.isFallback() ? R.string.dns_label_paused : R.string.dns_label_on;
+    }
+
+    private void toggleAdBlockingDns() {
+        if (!dnsGuard.canWrite()) {
+            Toast.makeText(this, R.string.dns_no_permission, Toast.LENGTH_LONG).show();
+            return;
+        }
+        boolean on = !dnsGuard.isOn();
+        Toast.makeText(this, !dnsGuard.setOn(on) ? R.string.not_available
+                : on ? R.string.dns_turned_on : R.string.dns_turned_off, Toast.LENGTH_LONG).show();
+    }
+
     private void addSettingsMenuRow(LinearLayout rows, PopupWindow popup, int title, Runnable action) {
+        addSettingsMenuRow(rows, popup, getText(title), action);
+    }
+
+    private void addSettingsMenuRow(LinearLayout rows, PopupWindow popup, CharSequence title, Runnable action) {
         View row = getLayoutInflater().inflate(R.layout.item_input, rows, false);
         row.findViewById(R.id.icon).setVisibility(View.GONE);
         row.findViewById(R.id.dot).setVisibility(View.GONE);

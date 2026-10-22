@@ -9,9 +9,9 @@
 
     <!-- Apps pinned to the dock row at the bottom, in this order. Missing apps are skipped. -->
     <string-array name="dock_apps">
+        <item>com.google.android.youtube.tv</item>
         <item>com.netflix.ninja</item>
         <item>com.amazon.amazonvideo.livingroom</item>
-        <item>com.google.android.youtube.tv</item>
         <item>in.startv.hotstar</item>
     </string-array>
     <!-- With fewer dock_apps than columns (or a dock app that is not installed), the free dock slots take
@@ -71,6 +71,7 @@
          settings panel) on scancode 240 (KEY_UNKNOWN), the scancode several TCL buttons share. Find the keycode
          with `tools/tv.py 'logcat -v time -s InputReader:D'` while pressing the button. Leave empty to omit. -->
     <integer-array name="settings_key_keycodes">
+        <item>83</item>
     </integer-array>
     <!-- What those Settings buttons open: false, the TV's Settings; true, a small glass panel at the top right
          with TV settings, Display, Network, Apps (re-enable an app) and Launcher settings, over whatever is on screen.
@@ -135,7 +136,7 @@
 
     <!-- Grid rows left visible under the dock on the home screen. 0 = dock sits at the very bottom. Tiles shrink if
          the dock, its title and this many rows would not otherwise fit the screen height. -->
-    <integer name="rows_below_dock">0</integer>
+    <integer name="rows_below_dock">2</integer>
 
     <!-- The focused dock app's name in large type above the dock. false keeps only the glow, which leaves room
          for bigger tiles when rows_below_dock is 2 or 3. -->
@@ -152,6 +153,11 @@
     <!-- Optional Default-home tile; keep this key for existing themes and tile-ordering work.
          Off by default because the chooser is also available from launcher settings. -->
     <bool name="show_home_settings_shortcut">false</bool>
+
+    <!-- An Up Next tile right after the dock: what the apps put in Continue watching, then their latest rows
+         (UpNextActivity). Needs READ_TV_LISTINGS, which build-and-install.sh grants. Apps that publish nothing,
+         such as Netflix, do not appear. Read from this file only, not from a theme. -->
+    <bool name="up_next">true</bool>
 
     <!-- Installed launchable apps, including ordinary Android apps. Also settable in config.json. -->
     <bool name="app_library">false</bool>

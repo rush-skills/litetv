@@ -107,4 +107,26 @@
     <!-- Cinematic top shelf (cinematic_home): the line under the focused dock app's name; %1$s is when it was
          last opened, e.g. "5 minutes ago" or "yesterday, 9:40 pm". -->
     <string name="last_opened">Last opened %1$s</string>
+    <!-- Up Next screen (UpNextActivity) and its tile (config.xml, up_next). -->
+    <string name="up_next">Up Next</string>
+    <string name="continue_watching">Continue watching</string>
+    <string name="watch_next_continue">Continue</string>
+    <string name="watch_next_next">Next episode</string>
+    <string name="watch_next_new">New</string>
+    <string name="watch_next_watchlist">Watchlist</string>
+    <string name="up_next_loading">One moment…</string>
+    <string name="up_next_empty">Nothing here yet. Apps add their shows here when you watch something.</string>
+    <string name="up_next_error">Up Next cannot read the TV\'s rows.</string>
+    <string name="up_next_permission">Up Next needs a permission. Run launcher/build-and-install.sh again, or run: tools/tv.py \'pm grant com.gathin.tvhome android.permission.READ_TV_LISTINGS\'</string>
+    <string name="minutes_left">%1$d min left</string>
+    <string name="hours_left">%1$d h %2$d min left</string>
+    <!-- Ad-blocking DNS switch in the Settings pill's hold-OK menu (DnsGuard). -->
+    <string name="dns_label_on">Ad-blocking DNS: on</string>
+    <string name="dns_label_off">Ad-blocking DNS: off</string>
+    <string name="dns_label_paused">Ad-blocking DNS: paused</string>
+    <string name="dns_label_no_permission">Ad-blocking DNS: needs adb</string>
+    <string name="dns_turned_on">Ad-blocking DNS is on.</string>
+    <string name="dns_turned_off">Ad-blocking DNS is off. The TV uses the normal DNS.</string>
+    <string name="dns_no_permission">Run launcher/build-and-install.sh again to give the launcher the DNS permission.</string>
+    <string name="dns_fallback">The ad-blocking DNS does not answer. The TV uses the normal DNS now and tries again in 10 minutes.</string>
 </resources>

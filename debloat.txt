@@ -1,0 +1,45 @@
+# TCL G13 (product G13_2K_GB, model "Smart TV"), Google TV 14 (SDK 34), build UKN2.241110.001 AU10.
+# MediaTek MT9221 (mt5867), 954 MB RAM, armeabi-v7a. Same board and firmware as cleanyourtv
+# examples/tcl-43s5k, which this list follows.
+#
+# Apply:   TV_HOST=<tv ip> tools/disable.sh debloat.txt
+# Undo:    TV_HOST=<tv ip> tools/restore.sh debloat.txt com.google.android.apps.tv.launcherx
+# Every package is DISABLED for user 0, never uninstalled. Nothing was disabled before this list
+# (backup/20261022-034349/packages-disabled.txt is empty), so a restore enables every line below.
+#
+# Kept on purpose (owner's choice, 2026-10-22):
+#   com.tcl.ttvs                  TCL analytics AND TCL firmware updates; adb cannot disable one without the other
+#   com.google.android.katniss    Google Assistant voice (mic button)
+#   com.google.android.apps.mediashell   Chromecast
+#   all streaming apps except the Google TV app (com.google.android.videos)
+# Kept because the TV needs them: com.mediatek.wwtv.tvcenter, com.mediatek.tvinput, com.mediatek.tv.service,
+# com.tcl.suspension (Input button), com.tcl.keyhelp, com.tcl.useragreement, com.google.android.tv.remote.service.
+# Not touched and never started: com.tcl.factory.view, mediatek.factorymenu.ui (factory menus).
+# Left on: fusion.android.tv.demo, com.mediatek.MtkDemo, com.tpa.ci. They hold TV_INPUT_HARDWARE, and
+# the tested 43S5K list keeps them.
+#
+# Lines that start with "#-" are batches not applied yet.
+
+# Batch 1: TCL tracking, ads and silent installs
+com.tcl.messagebox                     # TCL push messages and promotions
+com.tcl.logkit                         # log capture and upload
+com.tcl.partnercustomizer              # TCL promotion rows on the Google TV home
+android.autoinstalls.config.google.gtvpai   # silently installs partner apps
+com.google.android.partnersetup        # partner attribution (RLZ pings)
+
+# Batch 2: preloaded apps not used
+# com.tcl.browser                    # TCL "BrowseHere" browser: kept, the owner uses it (re-enabled 2026-10-22)
+com.google.android.play.games
+com.google.android.feedback
+com.android.tv.feedbackconsent
+com.google.android.videos            # Google TV app (Play Movies storefront)
+
+# Batch 3: setup wizard. It claims HOME (RecoveryActivity) once launcherx is gone, and on Google TV 14 that
+# can crash-loop system_server. Apply it while launcherx still owns Home, BEFORE launcher/build-and-install.sh.
+# Android deletes the saved Wi-Fi networks that setupwraith owns; the owner agreed. Check the owner of each
+# saved network first: the TV's main network belongs to android.uid.system, so the TV stays on Wi-Fi.
+com.google.android.tungsten.setupwraith
+
+# Batch 4: after the screensaver is the launcher's clock:
+#   tools/tv.py 'settings put secure screensaver_components com.gathin.tvhome/.ClockDream'
+# com.google.android.apps.tv.dreamx   # Ambient mode screensaver: kept, the owner chose to keep it (2026-10-22)
