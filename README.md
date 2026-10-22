@@ -36,12 +36,14 @@ The repo has two branches:
 4. **Up Next.** A tile right after the dock opens Continue watching and the latest rows from your apps.
 5. **Ad-blocking DNS.** Private DNS uses `dns.adguard-dns.com`. If AdGuard stops answering, the launcher
    switches to the router's DNS and switches back later.
+6. **Screensaver.** Aerial Views 1.8.5 (`com.neilturner.aerialviews`) shows aerial videos. The APK came
+   from the GitHub release page, not from the Play Store.
 
 These items did not change, on purpose:
 
 - **The TCL browser (BrowseHere):** you use it.
 - **Google Assistant, Chromecast and TCL firmware updates:** you use them.
-- **Ambient mode:** you chose to keep it as the screensaver.
+- **Ambient mode:** it stays enabled. Android uses it again if the Aerial Views setting goes away.
 - **The 1280x720 display size:** the firmware sets it on purpose for this low-memory TV. A larger size
   makes the UI slower, and text does not get sharper.
 - **The factory packages:** never open `com.tcl.factory.view` or `mediatek.factorymenu.ui`.
@@ -74,12 +76,13 @@ address in `TV_HOST` for every command below.
 | Give Home back to Google TV and keep the rest | `TV_HOST=192.168.0.3 ./rescue.sh` |
 | Undo everything | `TV_HOST=192.168.0.3 ./restore.sh` |
 | Undo everything and remove the new launcher | `UNINSTALL_LAUNCHER=1 TV_HOST=192.168.0.3 ./restore.sh` |
+| Undo everything and remove Aerial Views | `UNINSTALL_AERIAL_VIEWS=1 TV_HOST=192.168.0.3 ./restore.sh` |
 
 After you turn an app on again, put a `#` in front of its line in `debloat.txt`. Then a later run of
 `tools/disable.sh` does not disable it again.
 
 `restore.sh` turns on every package in `debloat.txt` and gives Home back to the Google TV launcher. It
-also resets Private DNS and the accessibility settings to their values before the debloat. The undo
+also resets Private DNS, the screensaver and the accessibility settings to their values before the debloat. The undo
 record is in `~/.cleanyourtv/recovery-192.168.0.3-d107ebe6.json`. Keep that file. If the TV has another
 IP address, `restore.sh` finds no record and turns on every package in the list. The TV had no disabled
 package before the debloat, so the result is the same.
@@ -188,6 +191,26 @@ adb -s 192.168.0.3:5555 shell am broadcast -n com.gathin.tvhome/.DnsGuardTestRec
 ```
 
 Only the adb shell can send these commands: the receiver requires `WRITE_SECURE_SETTINGS`.
+
+## Screensaver
+
+Aerial Views is the screensaver. It streams 1080p aerial videos from the internet and keeps no video on
+the TV.
+
+- **When it starts:** after 10 minutes with no input. A video that plays stops it from starting.
+- **Settings:** open the Aerial Views app. Keep the quality at 1080p and keep local videos off. This TV
+  has a 2K panel and little RAM.
+- **Updates:** the Play Store does not update an app from GitHub. To update it, get a newer APK from the
+  [release page](https://github.com/theothernt/AerialViews/releases). Then install it with `adb install -r`.
+
+Google TV has no menu to choose a screensaver from another app. This command sets it:
+
+```bash
+TV_HOST=192.168.0.3 tools/venv/bin/python tools/tv.py 'settings put secure screensaver_components com.neilturner.aerialviews/.ui.screensaver.DreamActivity'
+```
+
+If a Google TV update sets the screensaver back to Ambient mode, run the command again. To go back to
+Ambient mode yourself, run `settings delete secure screensaver_components` in the same way.
 
 ## TCL analytics
 
