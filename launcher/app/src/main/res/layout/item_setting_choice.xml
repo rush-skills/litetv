@@ -6,7 +6,7 @@
     android:layout_weight="1"
     android:layout_marginEnd="8dp"
     android:gravity="center"
-    android:background="@drawable/settings_choice_bg"
+    android:background="@drawable/settings_choice_bg_ours"
     android:textColor="@drawable/pill_text"
     android:textSize="17sp"
     android:fontFamily="@font/outfit_medium"

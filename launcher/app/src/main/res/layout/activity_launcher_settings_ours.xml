@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher settings: the rows on the left (LauncherSettingsActivity builds them), and on the right what the
+     focused row does, or the choices of a row while one is open. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="#FF0B0E13">
+
+    <ScrollView
+        android:id="@+id/scroll"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.6"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:clipToPadding="false"
+        android:paddingStart="64dp"
+        android:paddingEnd="20dp">
+
+        <LinearLayout
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="40dp"
+            android:paddingBottom="80dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:paddingStart="2dp"
+                android:text="@string/launcher_settings"
+                android:textColor="#FFFFFFFF"
+                android:textSize="36sp"
+                android:fontFamily="@font/outfit_light"
+                android:letterSpacing="-0.02" />
+        </LinearLayout>
+    </ScrollView>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="0.4"
+        android:paddingStart="28dp"
+        android:paddingEnd="64dp">
+
+        <LinearLayout
+            android:id="@+id/info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/infoTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFFFF"
+                android:textSize="24sp"
+                android:fontFamily="@font/outfit_light" />
+
+            <TextView
+                android:id="@+id/infoText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:textColor="#B3FFFFFF"
+                android:textSize="15sp"
+                android:lineSpacingMultiplier="1.25"
+                android:fontFamily="@font/outfit" />
+        </LinearLayout>
+
+        <!-- A row's choices (Background, Sort apps, Wallpaper) while it is open. -->
+        <ScrollView
+            android:id="@+id/choicesScroll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none"
+            android:clipToPadding="false"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/choices"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="40dp"
+                android:paddingBottom="40dp">
+
+                <TextView
+                    android:id="@+id/choicesTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:paddingStart="4dp"
+                    android:textColor="#8CFFFFFF"
+                    android:textSize="12sp"
+                    android:fontFamily="@font/outfit_medium"
+                    android:letterSpacing="0.12"
+                    android:textAllCaps="true" />
+            </LinearLayout>
+        </ScrollView>
+    </FrameLayout>
+</LinearLayout>

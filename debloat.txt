@@ -23,7 +23,9 @@
 # Batch 1: TCL tracking, ads and silent installs
 com.tcl.messagebox                     # TCL push messages and promotions
 com.tcl.logkit                         # log capture and upload
-com.tcl.partnercustomizer              # TCL promotion rows on the Google TV home
+# com.tcl.partnercustomizer            # kept: upstream's tcl-43s5k list now keeps it on (22944c33, #2138). It owns the
+#                                        tvlauncher.widget provider that com.mediatek.tv.service uses, and a related
+#                                        build crashed repeatedly without it. Not reproduced on G13.
 android.autoinstalls.config.google.gtvpai   # silently installs partner apps
 com.google.android.partnersetup        # partner attribution (RLZ pings)
 

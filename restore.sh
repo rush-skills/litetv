@@ -12,21 +12,21 @@
 # The two VPN apps were uninstalled on request; reinstall them from the Play Store if you want them.
 # The saved Wi-Fi network that setupwraith owned is gone; join it again in Settings if you need it.
 #
-# Usage: TV_HOST=192.168.0.3 ./restore.sh   (UNINSTALL_LAUNCHER=1 and UNINSTALL_AERIAL_VIEWS=1 remove those apps too)
+# Usage: TV_HOST=192.168.1.50 ./restore.sh   (UNINSTALL_LAUNCHER=1 and UNINSTALL_AERIAL_VIEWS=1 remove those apps too)
 set -euo pipefail
 cd "$(dirname "$0")"
-: "${TV_HOST:?set TV_HOST to the TV IP address, e.g. TV_HOST=192.168.0.3 $0}"
+: "${TV_HOST:?set TV_HOST to the TV IP address, e.g. TV_HOST=192.168.1.50 $0}"
 PY=tools/venv/bin/python
 [ -x "$PY" ] || { echo "run: python3 -m venv tools/venv && tools/venv/bin/pip install -r tools/requirements.txt"; exit 1; }
 
-# The record is named after the IP the TV had on 2026-10-22 (192.168.0.3). With another TV_HOST,
-# tools/restore.sh finds no record and enables every line of debloat.txt, which is the same result
-# here: nothing was disabled before the debloat (backup/20261022-034349/packages-disabled.txt is empty).
+# With a TV_HOST that has no record, tools/restore.sh enables every line of debloat.txt, which is the same
+# result here: nothing was disabled before the debloat (backup/20261022-034349/packages-disabled.txt is empty).
 tools/restore.sh debloat.txt com.google.android.apps.tv.launcherx
 
 # enabled_accessibility_services was unset and accessibility_enabled was 0 before; keep any other
 # service that is in the list now.
 printf '%s\n' \
+  "pm enable --user 0 com.tcl.partnercustomizer" \
   "settings delete global private_dns_mode" \
   "settings delete global private_dns_specifier" \
   "s=\$(settings get secure enabled_accessibility_services); n=\$(echo \"\$s\" | tr ':' '\n' | grep -v '^com.gathin.tvhome/' | paste -sd: -); if [ -z \"\$n\" ] || [ \"\$n\" = null ]; then settings delete secure enabled_accessibility_services; settings put secure accessibility_enabled 0; else settings put secure enabled_accessibility_services \"\$n\"; fi" \

@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.LinkProperties;
 import android.net.Network;
 import android.net.NetworkCapabilities;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
@@ -184,6 +185,7 @@ final class DnsGuard {
      * left alone.
      */
     private boolean strictAndBroken() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return false;   // Private DNS came in Android 9
         Network n = cm.getActiveNetwork();
         if (n == null) return false;
         NetworkCapabilities caps = cm.getNetworkCapabilities(n);
@@ -246,6 +248,7 @@ final class DnsGuard {
 
     /** The strict Private DNS server Android uses on the default network, or null. */
     private String activeServer() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return null;
         Network n = cm != null ? cm.getActiveNetwork() : null;
         LinkProperties lp = n != null ? cm.getLinkProperties(n) : null;
         return lp != null ? lp.getPrivateDnsServerName() : null;

@@ -10,10 +10,15 @@
     <string name="not_connected">No device</string>
     <string name="live_tv">Live TV</string>
     <string name="no_inputs">No inputs found</string>
+    <string name="more_inputs">More inputs</string>
     <string name="good_morning">Good morning</string>
     <string name="good_afternoon">Good afternoon</string>
     <string name="good_evening">Good evening</string>
+    <string name="good_forenoon">Good late morning</string>
     <string name="good_night">Good night</string>
+    <string name="festival_dussehra_greeting">Happy Dussehra</string>
+    <string name="festival_diwali_greeting">Happy Diwali</string>
+    <string name="festival_halloween_greeting">Happy Halloween</string>
     <string name="ethernet">Ethernet</string>
     <string name="offline">Offline</string>
     <string name="not_available">Not available on this TV</string>
@@ -21,17 +26,33 @@
     <string name="date_format">EEEE  d MMMM</string>
     <!-- Date next to the clock on Home; a locale can split it over two lines with \n. -->
     <string name="date_format_home" translatable="false">@string/date_format</string>
+    <string name="shamsi_month_farvardin">Farvardin</string>
+    <string name="shamsi_month_ordibehesht">Ordibehesht</string>
+    <string name="shamsi_month_khordad">Khordad</string>
+    <string name="shamsi_month_tir">Tir</string>
+    <string name="shamsi_month_mordad">Mordad</string>
+    <string name="shamsi_month_shahrivar">Shahrivar</string>
+    <string name="shamsi_month_mehr">Mehr</string>
+    <string name="shamsi_month_aban">Aban</string>
+    <string name="shamsi_month_azar">Azar</string>
+    <string name="shamsi_month_dey">Dey</string>
+    <string name="shamsi_month_bahman">Bahman</string>
+    <string name="shamsi_month_esfand">Esfand</string>
     <string name="stats_cpu">CPU %1$d%%</string>
-    <string name="stats_memory">Memory %1$d MB free</string>
+    <string name="stats_memory">Memory %1$d / %2$d MB</string>
     <string name="stats_storage">Storage %1$s free</string>
+    <string name="storage_gb_whole">%1$.0f GB</string>
+    <string name="storage_gb_decimal">%1$.1f GB</string>
     <string name="dream_name">Clock</string>
     <string name="vpn">VPN</string>
     <string name="vpn_off">VPN off</string>
     <string name="home_settings">Choose default home</string>
     <string name="home_settings_help">Select your original home to stop using CleanYourTV as Home, or CleanYourTV to switch back. The original launcher must be enabled and your TV must provide a home picker; use the restore script first if it was disabled.</string>
     <string name="launcher_settings">Launcher settings</string>
+    <string name="native_settings">Native settings</string>
     <string name="columns_label">Apps per row</string>
     <string name="rows_below_dock_label">Rows below dock</string>
+    <string name="dock_opacity_label">Dock band opacity</string>
     <string name="wallpaper_label">Wallpaper</string>
     <string name="wallpaper_state">Wallpaper: %1$s</string>
     <string name="wallpaper_none">None</string>
@@ -40,6 +61,8 @@
     <string name="animations_state">Animations: %1$s</string>
     <string name="advanced_effects">Advanced effects</string>
     <string name="advanced_effects_state">Advanced effects: %1$s</string>
+    <string name="open_on_start_label">Open on start</string>
+    <string name="open_on_start_state">Open on start: %1$s</string>
     <string name="advanced_effects_warning">Adds a lifted tile, icon zoom and smooth colour transitions. May increase memory use; the actual difference depends on your TV.</string>
     <string name="follow_theme">Follow theme (reset on-TV choices)</string>
     <string name="follow_theme_hint">Uses the current theme or built-in layout and motion settings. Pushing or resetting a theme also clears your on-TV choices.</string>
@@ -48,15 +71,6 @@
     <string name="quick_network">Network</string>
     <string name="quick_apps">Apps</string>
     <string name="quick_apps_hint">Re-enable</string>
-    <string name="quick_picture_tile">Picture</string>
-    <string name="quick_sound">Sound</string>
-    <string name="quick_bluetooth">Bluetooth</string>
-    <string name="quick_accessories">Remotes and accessories</string>
-    <string name="quick_ad_blocking">Ad blocking</string>
-    <string name="quick_on">On</string>
-    <string name="quick_off">Off</string>
-    <string name="quick_paused">Paused</string>
-    <string name="quick_needs_adb">Needs adb</string>
     <string name="on">On</string>
     <string name="off">Off</string>
     <string name="enable">Enable</string>
@@ -83,9 +97,15 @@
     <string name="card_state_new_key">New key</string>
     <string name="card_state_new_label">New name</string>
     <string name="dock_edit">Edit dock</string>
+    <!-- Settings menu: opens the system power menu (Restart on most TVs). -->
+    <string name="power_menu">Restart…</string>
     <string name="dock_edit_hint">Choose the dock place to change and press OK. Back to finish.</string>
     <string name="dock_edit_pick_app">Now choose the app to put there and press OK. Back to choose another place.</string>
+    <string name="tile_add_to_dock">Add to dock</string>
+    <string name="tile_replace_in_dock">Replace with another app</string>
+    <string name="dock_edit_pick_place">Choose the dock place for this app and press OK. Back to cancel.</string>
     <string name="reorder">Reorder apps</string>
+    <string name="tile_move">Move</string>
     <string name="reorder_hint">OK picks up an app, arrows move it, Back places it. Back again to finish.</string>
     <string name="reorder_not_saved">Couldn\'t save the new order</string>
     <string name="app_library">App library</string>
@@ -106,78 +126,36 @@
     <!-- The greeting, then greeting_name: "Good morning, Mr. Trịnh". -->
     <string name="greeting_with_name">%1$s, %2$s</string>
 
-    <!-- Race-weekend panel (RaceWeekend). Session names come from the calendar. -->
+    <!-- Race-weekend panel (RaceWeekend). -->
     <string name="race_kicker">Round %1$d · %2$s · %3$s</string>
     <string name="race_kicker_no_place">Round %1$d · %2$s</string>
     <string name="race_next">%1$s in %2$s</string>
     <string name="race_lights_out">Lights out in %1$s</string>
     <string name="race_live">%1$s · live</string>
     <string name="race_finished">Chequered flag</string>
+    <string name="race_practice_1">Practice 1</string>
+    <string name="race_practice_2">Practice 2</string>
+    <string name="race_practice_3">Practice 3</string>
+    <string name="race_sprint_qualifying">Sprint qualifying</string>
+    <string name="race_sprint">Sprint</string>
+    <string name="race_qualifying">Qualifying</string>
+    <string name="race_race">Race</string>
+    <string name="race_practice_1_short">FP1</string>
+    <string name="race_practice_2_short">FP2</string>
+    <string name="race_practice_3_short">FP3</string>
+    <string name="race_sprint_qualifying_short">SQ</string>
+    <string name="race_sprint_short">SPRINT</string>
+    <string name="race_qualifying_short">QUALI</string>
+    <string name="race_race_short">RACE</string>
+    <string name="race_countdown_minutes">%1$d min</string>
+    <string name="race_countdown_hours">%1$dh %2$dm</string>
+    <string name="race_countdown_days">%1$dd %2$dh</string>
     <!-- Cinematic top shelf (cinematic_home): the line under the focused dock app's name; %1$s is when it was
          last opened, e.g. "5 minutes ago" or "yesterday, 9:40 pm". -->
     <string name="last_opened">Last opened %1$s</string>
-    <!-- Up Next screen (UpNextActivity) and its tile (config.xml, up_next). -->
-    <string name="up_next">Up Next</string>
-    <string name="continue_watching">Continue watching</string>
-    <string name="watch_next_continue">Continue</string>
-    <string name="watch_next_next">Next episode</string>
-    <string name="watch_next_new">New</string>
-    <string name="watch_next_watchlist">Watchlist</string>
-    <string name="up_next_loading">One moment…</string>
-    <string name="up_next_empty">Nothing here yet. Apps add their shows here when you watch something.</string>
-    <string name="up_next_error">Up Next cannot read the TV\'s rows.</string>
-    <string name="up_next_permission">Up Next needs a permission. Run launcher/build-and-install.sh again, or run: tools/tv.py \'pm grant com.gathin.tvhome android.permission.READ_TV_LISTINGS\'</string>
-    <string name="minutes_left">%1$d min left</string>
-    <string name="hours_left">%1$d h %2$d min left</string>
-    <!-- Ad-blocking DNS switch in the Settings pill's hold-OK menu (DnsGuard). -->
-    <string name="dns_label_on">Ad-blocking DNS: on</string>
-    <string name="dns_label_off">Ad-blocking DNS: off</string>
-    <string name="dns_label_paused">Ad-blocking DNS: paused</string>
-    <string name="dns_label_no_permission">Ad-blocking DNS: needs adb</string>
-    <string name="dns_turned_on">Ad-blocking DNS is on.</string>
-    <string name="dns_turned_off">Ad-blocking DNS is off. The TV uses the normal DNS.</string>
-    <string name="dns_no_permission">Run launcher/build-and-install.sh again to give the launcher the DNS permission.</string>
-    <string name="dns_fallback">The ad-blocking DNS does not answer. The TV uses the normal DNS now and tries again in 10 minutes.</string>
-    <!-- Reorder mode and the tile menu (hold OK on a tile). -->
-    <string name="reorder_hint_idle">Select an app to pick it up · Back when you finish</string>
-    <string name="reorder_hint_moving">Use the arrows to move it · OK puts it down</string>
-    <string name="sort_now_custom">Sort apps is now Custom order, so your new order stays.</string>
-    <string name="tile_move">Move</string>
-    <string name="tile_app_info">App info</string>
-    <!-- Launcher settings: sections, rows and what each row does. -->
-    <string name="settings_section_home">Home</string>
-    <string name="settings_section_look">Look</string>
-    <string name="settings_section_motion">Motion</string>
-    <string name="settings_section_system">System</string>
-    <string name="columns_info">How many tiles each row of Home holds. More tiles make each tile smaller.</string>
-    <string name="rows_info">How many rows of apps show under the dock before you press Down. More rows make the tiles a little smaller.</string>
-    <string name="sort_apps">Sort apps</string>
-    <string name="sort_custom">Custom order</string>
-    <string name="sort_recent">Recently used</string>
-    <string name="sort_most_used">Most used</string>
-    <string name="sort_name">Name</string>
-    <string name="sort_info">The order of the apps after the dock. The dock stays as you set it. Recently used and Most used follow what you watch. If you move an app by hand, the order changes back to Custom order.</string>
-    <string name="sort_info_no_access">Usage access is off, so Home sees only the apps that you open from Home. Run launcher/build-and-install.sh again to give usage access.</string>
-    <string name="continue_row">Continue watching row</string>
-    <string name="continue_row_info">Shows what you were watching above the dock, from the apps that share it, for example Prime Video, JioHotstar and Apple TV. Netflix shares nothing. Press Up from the dock to get to it.</string>
-    <string name="reorder_info">Moves apps on Home. Select an app to pick it up, move it with the arrows and press OK to put it down. You can also hold OK on any app and select Move.</string>
-    <string name="dock_edit_info">Puts another app in one of the dock places.</string>
-    <string name="background">Background</string>
-    <string name="background_info">Plain is black with the glow of the focused app. Aurora, Scenes and Festive are pictures; Scenes changes every hour. The Live backgrounds move slowly. They use a little more power, but Home stays smooth.</string>
-    <string name="look_plain">Plain</string>
-    <string name="look_aurora">Aurora</string>
-    <string name="look_scenes">Scenes</string>
-    <string name="look_festive">Festive</string>
-    <string name="look_live_aurora">Live: Northern lights</string>
-    <string name="look_live_stars">Live: Starfield</string>
-    <string name="look_live_waves">Live: Waves</string>
-    <string name="look_failed">Couldn\'t change the background</string>
-    <string name="wallpaper_info">Which picture of the background shows. Rotate shows each one in turn.</string>
-    <string name="wallpaper_rotate">Rotate</string>
-    <string name="parallax">3D motion</string>
-    <string name="parallax_info">The background moves a little against the focused tile, so Home has depth. It works with every background except Plain.</string>
-    <string name="animations">Animations</string>
-    <string name="animations_info">Focus, glass and tile motion. Switch it off for the fastest response on a slow TV.</string>
-    <string name="follow_theme_short">Use theme defaults</string>
-    <string name="tv_settings_info">The TV\'s own settings: network, picture, sound, apps and more.</string>
+    <!-- game_day: a game on now, in the race panel. -->
+    <string name="game_live">Live now</string>
+    <string name="clock_format_system">System</string>
+    <string name="clock_format_12">12-hour</string>
+    <string name="clock_format_24">24-hour</string>
 </resources>
