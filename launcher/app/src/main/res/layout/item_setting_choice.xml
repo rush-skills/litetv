@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One choice of a segmented Launcher settings row (Apps per row, Rows below the dock). -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="0dp"
+    android:layout_height="48dp"
+    android:layout_weight="1"
+    android:layout_marginEnd="8dp"
+    android:gravity="center"
+    android:background="@drawable/settings_choice_bg"
+    android:textColor="@drawable/pill_text"
+    android:textSize="17sp"
+    android:fontFamily="@font/outfit_medium"
+    android:focusable="true"
+    android:clickable="true" />

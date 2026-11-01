@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -32,6 +33,9 @@ final class WallpaperPlayer {
     /** config wallpaper_true_color: ARGB_8888 instead of RGB_565. */
     private final Bitmap.Config bitmapConfig;
     private final int height;
+    /** config parallax: the picture is drawn a little larger and drifts against the focus (setFocusPoint). */
+    private final boolean parallax;
+    private final float density;
     private boolean active;
     private boolean closed;
     private boolean loading;
@@ -54,9 +58,16 @@ final class WallpaperPlayer {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         width = metrics.widthPixels;
         height = metrics.heightPixels;
+        density = metrics.density;
+        parallax = config.parallax;
         image = new ImageView(context);
         image.setScaleType(ImageView.ScaleType.CENTER_CROP);
         image.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
+        if (parallax) {
+            // Room for the drift at the screen edges.
+            image.setScaleX(1.08f);
+            image.setScaleY(1.08f);
+        }
         if (config.wallpaperEnabled && !files.isEmpty()) {
             root.addView(image, 0, new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -95,6 +106,14 @@ final class WallpaperPlayer {
             files.remove(first);   // unreadable or over 4K: try another, or keep the plain colour
             first = WallpaperRotation.pick(files, previous, order, random);
         }
+    }
+
+    /** With parallax on, the picture drifts against the focused tile (x, y: its centre as a share of the screen). */
+    void setFocusPoint(float x, float y) {
+        if (!parallax || image.getParent() == null) return;
+        float max = 18 * density;
+        image.animate().translationX((0.5f - x) * 2 * max).translationY((0.5f - y) * 1.2f * max)
+                .setDuration(900).setInterpolator(new DecelerateInterpolator(1.5f)).start();
     }
 
     void start() {

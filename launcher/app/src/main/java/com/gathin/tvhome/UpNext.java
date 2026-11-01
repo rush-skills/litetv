@@ -1,11 +1,16 @@
 package com.gathin.tvhome;
 
+import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.tv.TvContract;
 import android.net.Uri;
+import android.widget.Toast;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -57,8 +62,19 @@ final class UpNext {
         PackageManager pm = ctx.getPackageManager();
         Map<String, String> labels = new HashMap<>();
         List<Row> rows = new ArrayList<>();
+        Row watchNext = continueWatching(ctx, pm, labels, false);
+        if (watchNext != null) rows.add(watchNext);
+        addChannelRows(ctx, pm, labels, appOrder, rows);
+        return rows;
+    }
 
-        // Continue watching: newest engagement first.
+    /** Only the Continue watching row, in landscape cards (Home's row); null when it is empty. Off the main thread. */
+    static Row loadContinue(Context ctx) {
+        return continueWatching(ctx, ctx.getPackageManager(), new HashMap<>(), true);
+    }
+
+    /** Continue watching, newest engagement first; null when no app has anything in it. */
+    private static Row continueWatching(Context ctx, PackageManager pm, Map<String, String> labels, boolean landscape) {
         List<Item> watchNext = new ArrayList<>();
         List<Art> watchNextArt = new ArrayList<>();
         List<Long> engaged = new ArrayList<>();
@@ -87,11 +103,12 @@ final class UpNext {
             sorted.add(watchNext.get(order.get(i)));
             sortedArt.add(watchNextArt.get(order.get(i)));
         }
-        if (!sorted.isEmpty()) {
-            rows.add(row(ctx.getString(R.string.continue_watching), sorted, sortedArt));
-        }
+        return sorted.isEmpty() ? null : row(ctx.getString(R.string.continue_watching), sorted, sortedArt, landscape);
+    }
 
-        // Preview channels: one row each, in the app's own order (weight, highest first).
+    /** Preview channels: one row each, in the app's own order (weight, highest first). */
+    private static void addChannelRows(Context ctx, PackageManager pm, Map<String, String> labels, List<String> appOrder,
+                                       List<Row> rows) {
         Map<Long, String[]> channels = new HashMap<>();   // id -> {package, name}
         try (Cursor c = ctx.getContentResolver().query(TvContract.Channels.CONTENT_URI, null, null, null, null)) {
             if (c != null) {
@@ -156,19 +173,18 @@ final class UpNext {
             String name = channels.get(id)[1];
             String title = name == null || name.trim().isEmpty() || name.equalsIgnoreCase(app)
                     ? app : app + " · " + name;
-            rows.add(row(title, top, topArt));
+            rows.add(row(title, top, topArt, false));
         }
-        return rows;
     }
 
     /**
-     * Portrait cards when most items only have portrait art (posters), landscape cards otherwise, and each
-     * item then takes the art that fits its card.
+     * Portrait cards when most items only have portrait art (posters), landscape cards otherwise (always with
+     * forceLandscape), and each item then takes the art that fits its card.
      */
-    private static Row row(String title, List<Item> items, List<Art> arts) {
+    private static Row row(String title, List<Item> items, List<Art> arts, boolean forceLandscape) {
         int portraitOnly = 0;
         for (Art a : arts) if (portrait(a.posterAspect) && (a.thumbnail == null || portrait(a.thumbnailAspect))) portraitOnly++;
-        boolean portrait = portraitOnly * 2 > arts.size();
+        boolean portrait = !forceLandscape && portraitOnly * 2 > arts.size();
         for (int i = 0; i < items.size(); i++) {
             Art a = arts.get(i);
             Item item = items.get(i);
@@ -279,6 +295,65 @@ final class UpNext {
         long longValue(Cursor c, String name, long fallback) {
             int i = at(name);
             return i < 0 || c.isNull(i) ? fallback : c.getLong(i);
+        }
+    }
+
+    /** "12 min left" or "1 h 5 min left", or null when the program has no usable position. */
+    static String timeLeft(Context ctx, Item item) {
+        if (item.duration <= 0 || item.position <= 0 || item.position >= item.duration) return null;
+        long minutes = Math.max(1, (item.duration - item.position) / 60_000);
+        return minutes < 60 ? ctx.getString(R.string.minutes_left, minutes)
+                : ctx.getString(R.string.hours_left, minutes / 60, minutes % 60);
+    }
+
+    /** Opens the program in its app, or the app itself when the program's own link does not open. */
+    static void open(Context ctx, Item item) {
+        Intent program = programIntent(ctx, item);
+        if (program != null && start(ctx, program)) return;
+        if (item.pkg != null) {
+            PackageManager pm = ctx.getPackageManager();
+            Intent app = pm.getLeanbackLaunchIntentForPackage(item.pkg);
+            if (app == null) app = pm.getLaunchIntentForPackage(item.pkg);
+            if (app != null && start(ctx, app.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))) return;
+        }
+        Toast.makeText(ctx, R.string.not_available, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * The row's intent_uri comes from another app, so it is opened like a link: no URI permission grants, no
+     * selector, never into this launcher, and kept in the publishing app when the link names no app itself.
+     */
+    private static Intent programIntent(Context ctx, Item item) {
+        if (item.intentUri == null) return null;
+        Intent i;
+        try {
+            if (item.intentUri.startsWith("intent:")) {
+                i = Intent.parseUri(item.intentUri, Intent.URI_INTENT_SCHEME);
+            } else if (item.intentUri.startsWith("android-app:")) {
+                i = Intent.parseUri(item.intentUri, Intent.URI_ANDROID_APP_SCHEME);
+            } else {
+                i = new Intent(Intent.ACTION_VIEW, Uri.parse(item.intentUri));
+            }
+        } catch (URISyntaxException e) {
+            return null;
+        }
+        i.setFlags(i.getFlags() & ~(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION));
+        i.setClipData(null);
+        i.setSelector(null);
+        ComponentName target = i.getComponent();
+        if (target != null && ctx.getPackageName().equals(target.getPackageName())) return null;
+        if (ctx.getPackageName().equals(i.getPackage())) return null;
+        if (target == null && i.getPackage() == null && item.pkg != null) i.setPackage(item.pkg);
+        return i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    }
+
+    private static boolean start(Context ctx, Intent i) {
+        try {
+            ctx.startActivity(i);
+            return true;
+        } catch (ActivityNotFoundException | SecurityException e) {
+            return false;
         }
     }
 

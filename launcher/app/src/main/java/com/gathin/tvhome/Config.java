@@ -39,6 +39,11 @@ final class Config {
     static final String SETTINGS_NAME = "launcher_settings";
     static final String ROWS_BELOW_DOCK_KEY = "rows_below_dock";
     static final String WALLPAPER_CHOICE_KEY = "wallpaper_choice";
+    /** On-TV choices from Launcher settings that a theme push or reset also clears (the look of Home). */
+    static final String LIVE_BACKGROUND_KEY = "live_background", PARALLAX_KEY = "parallax", LOOK_KEY = "look";
+    /** On-TV choices that stay when a theme is pushed: how the grid is ordered and the Continue watching row. */
+    static final String APP_SORT_KEY = "app_sort", CONTINUE_ROW_KEY = "continue_row";
+    static final String SORT_CUSTOM = "custom", SORT_RECENT = "recent", SORT_MOST_USED = "most_used", SORT_NAME = "name";
     private static final String THEME_REVISION_NAME = "theme_revision";
     private static final String THEME_SIGNATURE_KEY = "theme_signature";
 
@@ -128,6 +133,14 @@ final class Config {
     final boolean ambientGlow;
     /** Minutes Home may sit untouched before the clock screensaver (config.xml, home_idle_clock_minutes); 0 is off. */
     final int homeIdleClockMinutes;
+    /** How the grid apps after the dock are ordered (Launcher settings): one of the SORT_ values. */
+    final String appSort;
+    /** A Continue watching row above the dock (config.xml continue_row, or Launcher settings). */
+    final boolean continueRow;
+    /** An animated backdrop (LiveBackdrop) instead of the wallpaper, or "off" (Launcher settings or a theme). */
+    final String liveBackground;
+    /** The background drifts against the focus, for a sense of depth (Launcher settings or a theme's parallax). */
+    final boolean parallax;
 
     private Config(List<String> dockApps, boolean fillDock, List<String> hiddenApps, String liveTvPackage,
                    String liveTvAction, Map<String, String> launchActions, Map<String, String> appLabels,
@@ -138,7 +151,12 @@ final class Config {
                    int[] settingsKeycodes, boolean settingsKeyPanel, boolean wallpaperEnabled, File wallpaper, List<File> wallpapers,
                    int wallpaperRotationMinutes, int wallpaperDim, String wallpaperOrder, boolean overlayApplied,
                    Festival festival, int[] inputKeycodes, List<String> appKeys,
-                   List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, boolean ambientGlow, int homeIdleClockMinutes) {
+                   List<RaceWeekend.Race> raceCalendar, boolean cinematicHome, boolean ambientGlow, int homeIdleClockMinutes,
+                   String appSort, boolean continueRow, String liveBackground, boolean parallax) {
+        this.appSort = appSort;
+        this.continueRow = continueRow;
+        this.liveBackground = liveBackground;
+        this.parallax = parallax;
         this.inputKeycodes = inputKeycodes;
         this.appKeys = Collections.unmodifiableList(appKeys);
         this.dockApps = Collections.unmodifiableList(dockApps);
@@ -238,6 +256,9 @@ final class Config {
         List<String> appKeys = new ArrayList<>(Arrays.asList(res.getStringArray(R.array.app_keys)));
         boolean cinematic = res.getBoolean(R.bool.cinematic_home);
         boolean ambientGlow = res.getBoolean(R.bool.ambient_glow);
+        boolean continueRow = res.getBoolean(R.bool.continue_row);
+        String liveBackground = LiveBackdrop.OFF;
+        boolean parallax = false;
         int idleClockMinutes = res.getInteger(R.integer.home_idle_clock_minutes);
         boolean applied = false;
 
@@ -288,6 +309,8 @@ final class Config {
             cinematic = bool(json, "cinematic_home", cinematic);
             ambientGlow = bool(json, "ambient_glow", ambientGlow);
             idleClockMinutes = integer(json, "home_idle_clock_minutes", idleClockMinutes, 0, 1440);
+            liveBackground = string(json, "live_background", liveBackground);
+            parallax = bool(json, "parallax", parallax);
         }
         // A theme push or reset invalidates choices made on the TV. On first use, remember the
         // current theme without clearing choices from an older launcher version.
@@ -300,6 +323,12 @@ final class Config {
         if (chosenRows >= 0 && chosenRows <= 3) rowsBelow = chosenRows;
         animations = choices.getBoolean("animations", animations);
         advancedEffects = choices.getBoolean("advanced_effects", advancedEffects);
+        String appSort = choices.getString(APP_SORT_KEY, SORT_CUSTOM);
+        if (!Arrays.asList(SORT_CUSTOM, SORT_RECENT, SORT_MOST_USED, SORT_NAME).contains(appSort)) appSort = SORT_CUSTOM;
+        continueRow = choices.getBoolean(CONTINUE_ROW_KEY, continueRow);
+        liveBackground = choices.getString(LIVE_BACKGROUND_KEY, liveBackground);
+        if (!LiveBackdrop.valid(liveBackground)) liveBackground = LiveBackdrop.OFF;
+        parallax = choices.getBoolean(PARALLAX_KEY, parallax);
         File wallpaper = dir != null ? new File(dir, WALLPAPER_NAME) : null;
         if (wallpaper != null && !(wallpaper.isFile() && wallpaper.length() > 0)) wallpaper = null;
         // A theme can also switch the wallpaper off while the file is still there.
@@ -335,6 +364,12 @@ final class Config {
                 wallpaperEnabled = true;
             }
         }
+        // An animated backdrop takes the wallpaper's place.
+        if (!LiveBackdrop.OFF.equals(liveBackground)) {
+            wallpapers.clear();
+            wallpaper = null;
+            wallpaperEnabled = false;
+        }
         // A festive skin comes only from a theme; config.xml has no festival.
         Festival festival = json == null ? Festival.NONE : Festival.parse(string(json, "festival", ""),
                 string(json, "festival_until", ""), string(json, "greeting", ""), string(json, "accent_color", ""));
@@ -347,7 +382,7 @@ final class Config {
                 Math.max(0, Math.min(100, skyIntensity)), settingsKeycodes, settingsKeyPanel, wallpaperEnabled, wallpaper,
                 wallpapers, rotationMinutes, wallpaperDim, wallpaperOrder, applied,
                 festival, inputKeycodes, appKeys, json == null ? Collections.emptyList() : raceCalendar(json), cinematic, ambientGlow,
-                Math.max(0, idleClockMinutes));
+                Math.max(0, idleClockMinutes), appSort, continueRow, liveBackground, parallax);
     }
 
     /**
@@ -389,14 +424,32 @@ final class Config {
             // Existing preferences survive an app upgrade, unless the first launch follows an
             // explicit theme push or reset by the updated tools.
             SharedPreferences.Editor editor = choices.edit();
-            if (!"absent".equals(token)) editor.remove("columns").remove("animations")
-                    .remove("advanced_effects").remove(ROWS_BELOW_DOCK_KEY).remove(WALLPAPER_CHOICE_KEY);
+            if (!"absent".equals(token)) clearLookChoices(editor.remove("columns").remove("animations")
+                    .remove("advanced_effects").remove(ROWS_BELOW_DOCK_KEY).remove(WALLPAPER_CHOICE_KEY));
             editor.putString(THEME_SIGNATURE_KEY, signature).commit();
         } else if (!seen.equals(signature)) {
-            choices.edit().remove("columns").remove("animations").remove("advanced_effects")
-                    .remove(ROWS_BELOW_DOCK_KEY).remove(WALLPAPER_CHOICE_KEY)
+            clearLookChoices(choices.edit().remove("columns").remove("animations").remove("advanced_effects")
+                    .remove(ROWS_BELOW_DOCK_KEY).remove(WALLPAPER_CHOICE_KEY))
                     .putString(THEME_SIGNATURE_KEY, signature).commit();
         }
+    }
+
+    /** The background picks made in Launcher settings; a pushed theme brings its own look instead. */
+    static SharedPreferences.Editor clearLookChoices(SharedPreferences.Editor editor) {
+        return editor.remove(LIVE_BACKGROUND_KEY).remove(PARALLAX_KEY).remove(LOOK_KEY);
+    }
+
+    /**
+     * Takes the theme files as they are now as the known theme, so the next load does not treat them as a push
+     * and clear the choices made on the TV. Looks writes the files from the TV itself and calls this after.
+     */
+    static void acceptCurrentTheme(Context ctx) {
+        File dir = dir(ctx);
+        if (dir == null) return;
+        File config = new File(dir, FILE_NAME);
+        String signature = fileStamp(config) + ":" + revisionToken(new File(dir, THEME_REVISION_NAME));
+        ctx.getSharedPreferences(SETTINGS_NAME, Context.MODE_PRIVATE).edit()
+                .putString(THEME_SIGNATURE_KEY, signature).commit();
     }
 
     private static String fileStamp(File file) {

@@ -11,6 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 /** Draws the tvOS style lighter band behind the first (dock) row and adds a gap below it. */
 public class DockDecoration extends RecyclerView.ItemDecoration {
+    /**
+     * The band's padding around the dock tiles. A focused tile grows by its zoom (up to 12%) and the glass glow
+     * around it (6dp); at 14dp the first tile's glow touched the band's corner. 22dp leaves it room on all sides.
+     */
+    static final float PAD_DP = 22f;
 
     private final int dockSize;
     private final float density;
@@ -67,14 +72,14 @@ public class DockDecoration extends RecyclerView.ItemDecoration {
             }
         }
         if (!any) return;
-        float pad = 14 * density;
+        float pad = PAD_DP * density;
         // The band can only draw inside the grid, and the first and last dock tiles sit 12dp in from its
         // edges: a full 14dp at the sides sliced the rounded ends flat (#454). Keep the sides, with the
         // 1dp edge line, inside the grid; the top and bottom have room.
         float side = Math.max(0f, Math.min(pad, Math.min(rect.left, parent.getWidth() - rect.right) - density));
         rect.inset(-side, -pad);
         rect.bottom += namesRoom;
-        float radius = 26 * density;
+        float radius = 30 * density;
         c.drawRoundRect(rect, radius, radius, band);
         c.drawRoundRect(rect, radius, radius, edge);
     }

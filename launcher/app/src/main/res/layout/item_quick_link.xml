@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- A row under the quick settings tiles that opens a settings screen. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="42dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp"
+    android:layout_marginTop="2dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="14dp"
+    android:paddingEnd="10dp"
+    android:background="@drawable/input_row_bg"
+    android:focusable="true"
+    android:clickable="true">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:tint="@drawable/pill_text"
+        android:duplicateParentState="true"
+        android:contentDescription="@null" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="8dp"
+        android:textColor="@drawable/pill_text"
+        android:duplicateParentState="true"
+        android:textSize="15sp"
+        android:fontFamily="@font/outfit_medium"
+        android:singleLine="true" />
+
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/ic_chevron"
+        android:tint="@drawable/pill_text_dim"
+        android:duplicateParentState="true"
+        android:contentDescription="@null" />
+</LinearLayout>

@@ -1,11 +1,7 @@
 package com.gathin.tvhome;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
-import android.content.ComponentName;
-import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -16,12 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -165,7 +159,7 @@ public class UpNextActivity extends Activity {
         focusedRow = row;
         rowFocus.put(row, index);
         heroTitle.setText(item.title);
-        heroMeta.setText(UpNext.join(item.subtitle, timeLeft(item)));
+        heroMeta.setText(UpNext.join(item.subtitle, UpNext.timeLeft(this, item)));
         heroDescription.setText(item.description);
         if (row != scrolledRow) {
             scrolledRow = row;
@@ -178,64 +172,6 @@ public class UpNextActivity extends Activity {
             };
             scroller.setTargetPosition(row);
             rowsLayout.startSmoothScroll(scroller);
-        }
-    }
-
-    private String timeLeft(UpNext.Item item) {
-        if (item.duration <= 0 || item.position <= 0 || item.position >= item.duration) return null;
-        long minutes = Math.max(1, (item.duration - item.position) / 60_000);
-        return minutes < 60 ? getString(R.string.minutes_left, minutes)
-                : getString(R.string.hours_left, minutes / 60, minutes % 60);
-    }
-
-    /** Opens the program in its app, or the app itself when the program's own link does not open. */
-    private void open(UpNext.Item item) {
-        Intent program = programIntent(item);
-        if (program != null && start(program)) return;
-        if (item.pkg != null) {
-            PackageManager pm = getPackageManager();
-            Intent app = pm.getLeanbackLaunchIntentForPackage(item.pkg);
-            if (app == null) app = pm.getLaunchIntentForPackage(item.pkg);
-            if (app != null && start(app.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))) return;
-        }
-        Toast.makeText(this, R.string.not_available, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * The row's intent_uri comes from another app, so it is opened like a link: no URI permission grants, no
-     * selector, never into this launcher, and kept in the publishing app when the link names no app itself.
-     */
-    private Intent programIntent(UpNext.Item item) {
-        if (item.intentUri == null) return null;
-        Intent i;
-        try {
-            if (item.intentUri.startsWith("intent:")) {
-                i = Intent.parseUri(item.intentUri, Intent.URI_INTENT_SCHEME);
-            } else if (item.intentUri.startsWith("android-app:")) {
-                i = Intent.parseUri(item.intentUri, Intent.URI_ANDROID_APP_SCHEME);
-            } else {
-                i = new Intent(Intent.ACTION_VIEW, Uri.parse(item.intentUri));
-            }
-        } catch (URISyntaxException e) {
-            return null;
-        }
-        i.setFlags(i.getFlags() & ~(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION));
-        i.setClipData(null);
-        i.setSelector(null);
-        ComponentName target = i.getComponent();
-        if (target != null && getPackageName().equals(target.getPackageName())) return null;
-        if (getPackageName().equals(i.getPackage())) return null;
-        if (target == null && i.getPackage() == null && item.pkg != null) i.setPackage(item.pkg);
-        return i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-    }
-
-    private boolean start(Intent i) {
-        try {
-            startActivity(i);
-            return true;
-        } catch (ActivityNotFoundException | SecurityException e) {
-            return false;
         }
     }
 
@@ -317,7 +253,7 @@ public class UpNextActivity extends Activity {
             boolean focused = h.itemView.isFocused();
             h.itemView.setScaleX(focused ? FOCUS_SCALE : 1f);
             h.itemView.setScaleY(focused ? FOCUS_SCALE : 1f);
-            h.itemView.setOnClickListener(v -> open(item));
+            h.itemView.setOnClickListener(v -> UpNext.open(UpNextActivity.this, item));
             h.itemView.setOnFocusChangeListener((v, hasFocus) -> {
                 v.animate().scaleX(hasFocus ? FOCUS_SCALE : 1f).scaleY(hasFocus ? FOCUS_SCALE : 1f)
                         .setDuration(150).start();

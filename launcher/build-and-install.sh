@@ -119,6 +119,7 @@ printf '%s\n' \
   "pm grant com.gathin.tvhome android.permission.ACCESS_FINE_LOCATION 2>/dev/null; echo location-granted" \
   "pm grant com.gathin.tvhome android.permission.READ_TV_LISTINGS && echo up-next-rows-granted" \
   "pm grant com.gathin.tvhome android.permission.WRITE_SECURE_SETTINGS && echo dns-guard-granted" \
+  "appops set com.gathin.tvhome GET_USAGE_STATS allow && echo usage-access-granted" \
   "cmd package compile -m speed -f com.gathin.tvhome" \
   "$DISABLE_STOCK" \
   "cmd package set-home-activity --user 0 com.gathin.tvhome/.MainActivity" \

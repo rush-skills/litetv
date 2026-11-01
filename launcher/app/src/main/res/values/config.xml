@@ -73,10 +73,12 @@
     <integer-array name="settings_key_keycodes">
         <item>83</item>
     </integer-array>
-    <!-- What those Settings buttons open: false, the TV's Settings; true, a small glass panel at the top right
-         with TV settings, Display, Network, Apps (re-enable an app) and Launcher settings, over whatever is on screen.
-         Both keys can also be set from a theme's config.json ("settings_key_keycodes": [83]). -->
-    <bool name="settings_key_panel">false</bool>
+    <!-- What those Settings buttons open: false, the TV's Settings; true, a glass card at the top right with the
+         time, tiles for Picture, Sound, Inputs, Bluetooth, Network and Ad blocking, and rows for TV settings, Apps
+         and Launcher settings, over whatever is on screen (QuickSettingsActivity). Both keys can also be set from a
+         theme's config.json ("settings_key_keycodes": [83]). On here: the owner wants the quick panel first, as the
+         stock Google TV home had. -->
+    <bool name="settings_key_panel">true</bool>
 
     <!-- More remote buttons that open the input switcher, by Android keycode (INPUT_KEY_SERVICE=1
          build-and-install.sh; KEYCODE_TV always does). For buttons only a disabled app answered: the Xiaomi
@@ -96,6 +98,10 @@
          EV_KEY code, in hex). A scancode entry wins over a keycode. A listed app that is not installed leaves the
          button doing nothing. Leave empty to omit. -->
     <string-array name="app_keys" translatable="false">
+        <!-- This TV's remote (BT_RC833A_B4): Sony LIV (keycode 4166, scancode 641) opens Apple TV, and TCL Channel
+             (keycode 4020, scancode 456) opens JioHotstar. Read from `logcat | grep interceptKeyBeforeQueueing`. -->
+        <item>4166:com.apple.atve.androidtv.appletv</item>
+        <item>4020:in.startv.hotstar</item>
     </string-array>
 
     <!-- Show the Solar Hijri (Shamsi) date used in Iran and Afghanistan, e.g. "27 Mehr 1405", above the
@@ -158,6 +164,9 @@
          (UpNextActivity). Needs READ_TV_LISTINGS, which build-and-install.sh grants. Apps that publish nothing,
          such as Netflix, do not appear. Read from this file only, not from a theme. -->
     <bool name="up_next">true</bool>
+    <!-- A Continue watching row above the dock, from the same Watch Next rows as Up Next (needs READ_TV_LISTINGS, which
+         build-and-install.sh grants). Launcher settings can switch it on or off on the TV. -->
+    <bool name="continue_row">true</bool>
 
     <!-- Installed launchable apps, including ordinary Android apps. Also settable in config.json. -->
     <bool name="app_library">false</bool>

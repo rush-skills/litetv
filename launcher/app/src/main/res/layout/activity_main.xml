@@ -146,6 +146,43 @@
             android:visibility="gone" />
     </LinearLayout>
 
+    <!-- Continue watching (ResumeRow): small cards in the top shelf's space, placed above the dock in code. -->
+    <LinearLayout
+        android:id="@+id/resumeRow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:alpha="0"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/resumeLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="56dp"
+            android:text="@string/continue_watching"
+            android:textColor="#B3FFFFFF"
+            android:textSize="12sp"
+            android:fontFamily="@font/outfit_medium"
+            android:letterSpacing="0.1"
+            android:textAllCaps="true"
+            android:singleLine="true"
+            android:ellipsize="end" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/resumeCards"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:layout_marginTop="6dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:paddingEnd="56dp"
+            android:clipToPadding="false"
+            android:clipChildren="false"
+            android:overScrollMode="never"
+            android:scrollbars="none" />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -374,4 +411,22 @@
         android:layout_height="10dp"
         android:alpha="0"
         android:importantForAccessibility="no" />
+
+    <!-- Reorder and edit-dock modes: what the keys do, for as long as the mode is on. -->
+    <TextView
+        android:id="@+id/reorderHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="22dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@drawable/glass_panel"
+        android:elevation="16dp"
+        android:textColor="#FFFFFFFF"
+        android:textSize="15sp"
+        android:fontFamily="@font/outfit_medium"
+        android:visibility="gone" />
 </FrameLayout>

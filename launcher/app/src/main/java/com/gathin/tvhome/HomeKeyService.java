@@ -64,6 +64,15 @@ public class HomeKeyService extends AccessibilityService {
             }
             return true;
         }
+        // With the panel on, the Input button opens the panel's input list, so TCL's source panel is not needed.
+        if (settingsPanel && event.getKeyCode() == KeyEvent.KEYCODE_TV_INPUT) {
+            if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) {
+                startActivity(new Intent(this, QuickSettingsActivity.class)
+                        .putExtra(QuickSettingsActivity.EXTRA_INPUTS, true)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            }
+            return true;
+        }
         String app = appKeys.get(event.getKeyCode());
         if (app != null) {
             if (event.getAction() == KeyEvent.ACTION_UP && !event.isCanceled()) RemoteKeys.launch(this, app);

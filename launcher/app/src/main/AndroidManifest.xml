@@ -22,6 +22,11 @@
     <!-- Needed since Android 10 to read the Wi-Fi network name for the network pill. Never requested at
          runtime: build-and-install grants it with pm grant, so lint's Android 12 "ask for COARSE with
          FINE" rule does not apply here. -->
+    <!-- Sort apps by Recently used or Most used (AppUsage); usage access is given over adb (build-and-install.sh). -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <!-- Bluetooth on or off for the quick settings tile; Android 12 and later need no permission for that. -->
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"
         tools:ignore="CoarseFineLocation" />
 

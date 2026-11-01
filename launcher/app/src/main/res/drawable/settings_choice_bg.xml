@@ -1,23 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Launcher settings rows and choices: white when focused, like the pills on Home; a blue outline for the value
+     in use; quiet glass otherwise. -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="#5574A987" />
+            <solid android:color="#F5FFFFFF" />
             <corners android:radius="14dp" />
-            <stroke android:width="2dp" android:color="#FFB9E7C7" />
         </shape>
     </item>
     <item android:state_selected="true">
         <shape android:shape="rectangle">
-            <solid android:color="#334DAE6D" />
+            <solid android:color="#2E6EC1FF" />
             <corners android:radius="14dp" />
-            <stroke android:width="1dp" android:color="#FF4DAE6D" />
+            <stroke android:width="1.5dp" android:color="#FF6EC1FF" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="#FF242B34" />
+            <solid android:color="#12FFFFFF" />
             <corners android:radius="14dp" />
+            <stroke android:width="1dp" android:color="#14FFFFFF" />
         </shape>
     </item>
 </selector>

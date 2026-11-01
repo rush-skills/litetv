@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One Launcher settings row: its name on the left, the value in use on the right. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="54dp"
+    android:layout_marginTop="6dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingStart="20dp"
+    android:paddingEnd="14dp"
+    android:background="@drawable/settings_choice_bg"
+    android:focusable="true"
+    android:clickable="true">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:textColor="@drawable/pill_text"
+        android:duplicateParentState="true"
+        android:textSize="17sp"
+        android:fontFamily="@font/outfit_medium"
+        android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:textColor="@drawable/pill_text_dim"
+        android:duplicateParentState="true"
+        android:textSize="15sp"
+        android:fontFamily="@font/outfit"
+        android:singleLine="true" />
+
+    <ImageView
+        android:id="@+id/chevron"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="6dp"
+        android:src="@drawable/ic_chevron"
+        android:tint="@drawable/pill_text_dim"
+        android:duplicateParentState="true"
+        android:contentDescription="@null" />
+</LinearLayout>

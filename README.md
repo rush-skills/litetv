@@ -32,8 +32,12 @@ The repo has two branches:
    The debloat disabled the packages for user 0 and uninstalled no system package.
 2. **Uninstalled apps.** NordVPN and ExpressVPN, on request.
 3. **New Home screen.** The cleanyourtv launcher (`com.gathin.tvhome`) is Home. The dock holds
-   YouTube, Netflix, Prime Video and JioHotstar. The gear button on the remote opens Settings.
-4. **Up Next.** A tile right after the dock opens Continue watching and the latest rows from your apps.
+   YouTube, Netflix, Prime Video and JioHotstar. The gear button on the remote opens a quick panel at the top
+   right: Picture, Sound, Inputs, Bluetooth, Network, Ad blocking, TV settings, Apps and Launcher settings.
+   The Inputs tile and the Input button list HDMI 1, HDMI 2, AV and Live TV in the same panel.
+   The Sony LIV button opens Apple TV, and the TCL Channel button opens JioHotstar.
+4. **Up Next.** A tile right after the dock opens Continue watching and the latest rows from your apps. A
+   Continue watching row also shows above the dock. Press Up from the dock to get to it.
 5. **Ad-blocking DNS.** Private DNS uses `dns.adguard-dns.com`. If AdGuard stops answering, the launcher
    switches to the router's DNS and switches back later.
 6. **Screensaver.** Aerial Views 1.8.5 (`com.neilturner.aerialviews`) shows aerial videos. The APK came
@@ -91,6 +95,28 @@ The full backup from before the first change is in `backup/20261022-034349/`. It
 lists, `getprop` and all settings.
 
 A factory reset also clears every change, because the changes are in user data only.
+
+## Launcher settings
+
+Hold OK on the **Settings** pill and select **Launcher settings**, or open it from the quick panel. It has these
+rows:
+
+| Row | What it does |
+|---|---|
+| Apps per row, Rows below the dock | The size of the grid |
+| Sort apps | Custom order, Recently used, Most used or Name, for the apps after the dock |
+| Continue watching row | The row of shows above the dock, on or off |
+| Reorder apps, Edit dock | Starts that mode on Home. A bar at the bottom tells you which keys to press |
+| Background | Plain, Aurora, Scenes, Festive, or a live background: Northern lights, Starfield or Waves |
+| Wallpaper | One picture of the background, or all of them in turn. It shows only for a background with several pictures |
+| 3D motion | The background moves a little against the focused tile |
+| Animations, Advanced effects | How much the tiles move |
+
+To move one app, hold OK on it and select **Move**. Then use the arrows and press OK to put it down.
+
+Recently used and Most used need usage access. `launcher/build-and-install.sh` gives it with
+`appops set com.gathin.tvhome GET_USAGE_STATS allow`. Without usage access, Home counts only the apps that you
+open from Home.
 
 ## Change the dock order
 
