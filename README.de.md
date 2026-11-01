@@ -109,7 +109,7 @@ die nach Hause telefoniert, keine Apps, um die du nie gebeten hast.
 | ![Das Aurora-Theme: ein Hintergrund und getönte Pillen, ohne neuen Build aufgespielt](themes/aurora/screenshot.jpg) | ![Sechs Spalten und ein Dock mit sechs Apps aus der config.json eines Themes](themes/six-columns/screenshot.jpg) |
 | *Aurora-Theme, aufgespielt mit `tools/theme.sh`* | *Sechs Spalten und ein Dock mit sechs Apps, derselbe Launcher* |
 | ![Eine Kachel verschieben: OK gehalten, Verschieben gewählt, die Kachel ist angehoben und die anderen abgedunkelt](docs/tile-move.jpg) | ![Die App-Bibliothek: installierte Apps, ein Druck legt eine App wieder auf Home](docs/app-library.jpg) |
-| *Mit `tile_menu`: OK auf einer Kachel halten, Verschieben: Pfeile tragen sie, Zurück legt sie ab* | *App-Bibliothek: ein Druck legt eine entfernte App wieder auf Home* |
+| *OK auf einer Kachel halten, Verschieben: Pfeile tragen sie, Zurück legt sie ab* | *App-Bibliothek: ein Druck legt eine entfernte App wieder auf Home* |
 
 ## Unterstützte Fernseher
 
@@ -262,7 +262,7 @@ Gerät übrig bleibt, steht in der [Fehlerbehebung](docs/TROUBLESHOOTING.md).
 | **Themes** | Hintergrund, Wallpaper und Layout aus einer `config.json`, über WLAN aufgespielt, ohne neuen Build. Sechzehn liegen in [`themes/`](themes/), das eingebaute `default/` mitgerechnet |
 | **31 Sprachen** | Folgt der Sprache des Fernsehers, mit vollständig gespiegeltem Layout von rechts nach links für Hebräisch |
 | **App-Bibliothek** | Optional: jede installierte App durchsehen und Home-Verknüpfungen hinzufügen oder entfernen. Siehe [die Anleitung zur App-Bibliothek](docs/app-library.md) |
-| **Kachelmenü** | Optional (`tile_menu`): OK auf einer Kachel halten für Verschieben, Von Home entfernen und App-Info. Aus: OK halten öffnet App-Info |
+| **Kachelmenü** | Standardmäßig an (`tile_menu`): OK auf einer Kachel halten für Verschieben, Von Home entfernen und App-Info. Aus: OK halten öffnet App-Info |
 | **Modul-Karten** | Jede TV-App kann eine eigene Kachel anbieten; du stimmst jeder einmal zu. Siehe [`docs/modules.md`](docs/modules.md) |
 | **Add-ons** | Optionale Apps, die sich als Modul-Karten einhängen, liegen in [`addons/`](addons/) und werden nie in den Launcher gebaut |
 | **Uhr-Bildschirmschoner** | Eine wandernde Uhr über dem Leuchten, damit nichts einbrennt |

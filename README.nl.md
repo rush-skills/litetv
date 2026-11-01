@@ -105,7 +105,7 @@ En een tv die je niet langer tegenwerkt: geen gesponsorde rijen, geen opdringeri
 | ![Het aurora-thema: een achtergrond en gekleurde knoppen, toegepast zonder opnieuw te bouwen](themes/aurora/screenshot.jpg) | ![Zes kolommen en een dock met zes apps uit config.json van een thema](themes/six-columns/screenshot.jpg) |
 | *Aurora-thema toegepast met `tools/theme.sh`* | *Zes kolommen en een dock met zes apps, dezelfde launcher* |
 | ![Een tegel verplaatsen: houd OK ingedrukt, kies Verplaatsen en verplaats de tegel terwijl de andere tegels dimmen](docs/tile-move.jpg) | ![De appbibliotheek: geïnstalleerde apps; met één druk voeg je een app weer toe aan het startscherm](docs/app-library.jpg) |
-| *Met `tile_menu`: houd OK ingedrukt op een tegel en kies Verplaatsen; verplaats met de pijltjes en druk op Terug om de tegel neer te zetten* | *Appbibliotheek: met één druk zet je een verwijderde app terug op het startscherm* |
+| *Houd OK ingedrukt op een tegel en kies Verplaatsen; verplaats met de pijltjes en druk op Terug om de tegel neer te zetten* | *Appbibliotheek: met één druk zet je een verwijderde app terug op het startscherm* |
 
 <a id="supported-tvs"></a>
 ## Ondersteunde tv's
@@ -663,7 +663,7 @@ De **tv** moet Android 8.0 (API 26) of nieuwer gebruiken. `minSdk` stelt de mini
 | **Thema's** | Achtergrond, wallpaper en indeling komen uit een via wifi verzonden `config.json`; opnieuw bouwen is niet nodig. In [`themes/`](themes/) staan zestien thema's, inclusief het ingebouwde `default/`. |
 | **31 talen** | Volgt de taal van de tv, met een volledig gespiegeld rechts-naar-links ontwerp voor Hebreeuws. |
 | **Appbibliotheek** | Optioneel: bekijk alle geïnstalleerde apps en voeg snelkoppelingen op het startscherm toe of verwijder ze. Zie [de handleiding voor de appbibliotheek](docs/app-library.md). |
-| **Tegelmenu** | Optioneel (`tile_menu`): houd OK ingedrukt op een tegel voor Verplaatsen, Verwijderen van startscherm en App-info. Staat dit uit, dan opent lang indrukken de app-info. |
+| **Tegelmenu** | Standaard aan (`tile_menu`): houd OK ingedrukt op een tegel voor Verplaatsen, Verwijderen van startscherm en App-info. Staat dit uit, dan opent lang indrukken de app-info. |
 | **Modulekaarten** | Elke tv-app kan een eigen tegel aanbieden; je keurt elke app één keer goed. Zie [`docs/modules.md`](docs/modules.md). |
 | **Uitbreidingen** | Optionele apps die als modulekaart worden toegevoegd. Ze staan in [`addons/`](addons/) en worden nooit in de launcher ingebouwd. |
 | **Klokschermbeveiliging** | Een langzaam bewegende klok over de gloed, zodat het beeld niet inbrandt. |
